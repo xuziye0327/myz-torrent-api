@@ -18,13 +18,21 @@ steps:
     command: 'get'
     arguments: '-d'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
+- task: PowerShell@2
+  displayName: 'mkdir'
+  inputs:
+    targetType: 'inline'
+    script: 'mkdir ./bin'
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
 - task: Go@0
+  displayName: 'go build'
   inputs:
     command: 'build'
-    arguments: '-o $(OutputName)'
+    arguments: '-o ./bin'
     workingDirectory: '$(System.DefaultWorkingDirectory)'
 - task: CopyFiles@2
   inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/bin'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
 - task: PublishBuildArtifacts@1
   inputs:
