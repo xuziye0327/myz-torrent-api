@@ -14,6 +14,8 @@ type File struct {
 	Name     string `json:"name"`
 	Size     int64  `json:"size"`
 	Childs   Files  `json:"childs,omitempty"`
+
+	isDir bool
 }
 
 // Files struct slice
@@ -66,8 +68,8 @@ func (a Files) Swap(i, j int) {
 }
 
 func (a Files) Less(i, j int) bool {
-	if a[i].Childs == nil && a[j].Childs == nil {
+	if a[i].isDir == a[j].isDir {
 		return a[i].Name < a[j].Name
 	}
-	return a[i].Childs == nil
+	return a[i].isDir
 }
