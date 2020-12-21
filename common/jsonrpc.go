@@ -1,0 +1,65 @@
+package common
+
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+)
+
+const jsonrpcVersion = "2.0"
+
+// RPCRequest is represented by sending a Request object to a Server.
+// JSON-RPC 2.0 Specification
+type RPCRequest struct {
+	JSONRPC string      `json:"jsonrpc"`
+	Method  string      `json:"method"`
+	Params  interface{} `json:"params,omitempty"`
+	ID      string      `json:"id"`
+}
+
+// RPCResponse is expressed as a single JSON Object, the Server MUST reply with a Response.
+type RPCResponse struct {
+	JSONRPC string      `json:"jsonrpc"`
+	Result  interface{} `json:"result,omitempty"`
+	Error   *RPCError   `json:"error,omitempty"`
+	ID      string      `json:"id"`
+}
+
+// RPCError is a Object that the Response Object MUST contain the error member with a value
+type RPCError struct {
+	Code    int         `json:"code"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
+}
+
+// Call a jsonrpc method
+func Call(url, method string, params ...interface{}) (*RPCResponse, error) {
+	rpcReq := &RPCRequest{
+		JSONRPC: jsonrpcVersion,
+		Method:  method,
+	}
+	if len(params) != 0 {
+		rpcReq.Params = params
+	}
+
+	rpcJSON, err := json.Marshal(rpcReq)
+	if err != nil {
+		return nil, err
+	}
+
+	httpReq, err := http.NewRequest("POST", url, bytes.NewReader(rpcJSON))
+	if err != nil {
+		return nil, err
+	}
+
+	httpResp, err := http.DefaultClient.Do(httpReq)
+	if err != nil {
+		return nil, err
+	}
+
+	var rpcResp *RPCResponse
+	decoder := json.NewDecoder(httpResp.Body)
+	err = decoder.Decode(&rpcResp)
+
+	return rpcResp, err
+}
