@@ -9,16 +9,18 @@ import (
 
 const testProtal = 34667
 
-func TestCall(t *testing.T) {
+func TestJSONRPC(t *testing.T) {
 	startUpLocalServer()
-
-	if resp, err := Call(fmt.Sprintf("http://localhost:%v/rpctest", testProtal), "get"); err != nil {
-		t.Error(err)
-	} else {
-		if resp.Result != "get" {
-			t.Errorf("Restlt is not 'get'")
+	rpc := NewRPCClient(fmt.Sprintf("http://localhost:%v/rpctest", testProtal))
+	t.Run("get", func(t *testing.T) {
+		if resp, err := rpc.Call("get"); err != nil {
+			t.Error(err)
+		} else {
+			if resp.Result != "get" {
+				t.Errorf("Restlt is not 'get'")
+			}
 		}
-	}
+	})
 }
 
 func startUpLocalServer() {

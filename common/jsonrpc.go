@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"time"
 )
 
 const jsonrpcVersion = "2.0"
@@ -32,8 +33,26 @@ type RPCError struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
+// RPCClient is a json rpc 2.0 client
+type RPCClient struct {
+	url        string
+	httpClient *http.Client
+}
+
+// NewRPCClient creates a rpc client
+func NewRPCClient(url string) *RPCClient {
+	httpCli := &http.Client{
+		Timeout: time.Second,
+	}
+
+	return &RPCClient{
+		url:        url,
+		httpClient: httpCli,
+	}
+}
+
 // Call a jsonrpc method
-func Call(url, method string, params ...interface{}) (*RPCResponse, error) {
+func (cli *RPCClient) Call(method string, params ...interface{}) (*RPCResponse, error) {
 	rpcReq := &RPCRequest{
 		JSONRPC: jsonrpcVersion,
 		Method:  method,
@@ -47,12 +66,12 @@ func Call(url, method string, params ...interface{}) (*RPCResponse, error) {
 		return nil, err
 	}
 
-	httpReq, err := http.NewRequest("POST", url, bytes.NewReader(rpcJSON))
+	httpReq, err := http.NewRequest("POST", cli.url, bytes.NewReader(rpcJSON))
 	if err != nil {
 		return nil, err
 	}
 
-	httpResp, err := http.DefaultClient.Do(httpReq)
+	httpResp, err := cli.httpClient.Do(httpReq)
 	if err != nil {
 		return nil, err
 	}
