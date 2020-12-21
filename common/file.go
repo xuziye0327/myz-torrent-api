@@ -47,6 +47,8 @@ func ListFiles(root string) (Files, error) {
 			Name:     f.Name(),
 			Size:     f.Size(),
 			Childs:   childs,
+
+			isDir: f.IsDir(),
 		})
 	}
 
