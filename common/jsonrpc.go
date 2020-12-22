@@ -42,7 +42,7 @@ type RPCClient struct {
 // NewRPCClient creates a rpc client
 func NewRPCClient(url string) *RPCClient {
 	httpCli := &http.Client{
-		Timeout: time.Second,
+		Timeout: time.Second * 10,
 	}
 
 	return &RPCClient{
