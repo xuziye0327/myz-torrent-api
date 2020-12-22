@@ -8,6 +8,8 @@ type Status struct {
 	CompletedLength int64  `json:"completedLength,string"`
 	TotalLength     int64  `json:"totalLength"`
 	DownloadSpeed   int64  `json:"downloadSpeed,string"`
+	ErrorCode       int    `json:"errorCode,string"`
+	ErrorMessage    string `json:"errorMessage"`
 }
 
 // GlobalStatistics is the overall download and upload speeds.
