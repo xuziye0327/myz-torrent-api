@@ -32,3 +32,8 @@ const (
 	complete State = "complete"
 	removed  State = "removed"
 )
+
+type Method struct {
+	MethodName string        `json:"methodName"`
+	Params     []interface{} `json:"params,omitempty"`
+}

@@ -19,7 +19,7 @@ type Config struct {
 type DownloadConfig struct {
 	DownloadDir  string `long:"download-directory" json:"download_directory"`
 	Aria2Address string `json:"aria2_address"`
-	Aria2Secert  string `json:"aria2_secert"`
+	Aria2secret  string `json:"aria2_secret"`
 }
 
 // LoadConfig will load ~/.myz_torrent_config.json or generate a new config.
@@ -42,8 +42,8 @@ func LoadConfig() (*Config, error) {
 	var aria2Address string
 	flag.StringVar(&aria2Address, "aria2-address", "", "")
 
-	var aria2Secert string
-	flag.StringVar(&aria2Secert, "aria2-secert", "", "")
+	var aria2secret string
+	flag.StringVar(&aria2secret, "aria2-secret", "", "")
 
 	flag.Parse()
 
@@ -55,7 +55,7 @@ func LoadConfig() (*Config, error) {
 		DownloadConfig: &DownloadConfig{
 			DownloadDir:  d,
 			Aria2Address: aria2Address,
-			Aria2Secert:  aria2Secert,
+			Aria2secret:  aria2secret,
 		},
 	}
 

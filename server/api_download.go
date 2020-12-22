@@ -6,6 +6,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func (s *Server) listJob(c *gin.Context) {
+	globalStat, err := s.aria2.GetGlobalStat()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+		return
+	}
+
+	if stats, err := s.aria2.TellAllJob(globalStat.NumWaiting, globalStat.NumStopped); err != nil {
+		c.JSON(http.StatusInternalServerError, err)
+	} else {
+		c.JSON(http.StatusOK, stats)
+	}
+}
+
 func (s *Server) listActiveJob(c *gin.Context) {
 	if stats, err := s.aria2.TellActive(); err != nil {
 		c.JSON(http.StatusOK, err)

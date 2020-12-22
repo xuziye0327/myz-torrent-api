@@ -5,6 +5,6 @@
     "download_config": {
         "download_directory": "~/myz_torrent/download/",
         "aria2_address": "localhost:6800",
-        "aria2_secert": ""
+        "aria2_secret": ""
     }
 }

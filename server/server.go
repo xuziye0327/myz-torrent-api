@@ -37,6 +37,7 @@ func (s *Server) Run() error {
 func (s *Server) initRouter() {
 	r := gin.Default()
 
+	r.GET("job", s.listJob)
 	r.GET("active_job", s.listActiveJob)
 	r.GET("waiting_job", s.listWaitingJob)
 	r.GET("stopped_job", s.listStoppedJob)
@@ -76,7 +77,7 @@ func (s *Server) initConfig() error {
 
 func (s *Server) initDownloader() error {
 	if s.conf.DownloadConfig.Aria2Address != "" {
-		s.aria2 = aria2.NewAria2WithSecret(fmt.Sprintf("%s/jsonrpc", s.conf.DownloadConfig.Aria2Address), s.conf.DownloadConfig.Aria2Secert)
+		s.aria2 = aria2.NewAria2WithSecret(fmt.Sprintf("%s/jsonrpc", s.conf.DownloadConfig.Aria2Address), s.conf.DownloadConfig.Aria2secret)
 	}
 	return nil
 }

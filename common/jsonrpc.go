@@ -66,6 +66,7 @@ func (cli *RPCClient) Call(method string, params ...interface{}) (*RPCResponse, 
 	if err != nil {
 		return nil, err
 	}
+	log.Printf("jsonrpc request: %s", string(rpcJSON))
 
 	httpReq, err := http.NewRequest("POST", cli.url, bytes.NewReader(rpcJSON))
 	if err != nil {
