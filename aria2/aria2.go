@@ -68,7 +68,7 @@ func (a *Aria2) handler(method string, ret interface{}, params ...interface{}) e
 	if resp, err := a.rpcClient.Call(method, a.fixParams(params...)...); err != nil {
 		return err
 	} else if resp.Error != nil {
-		return fmt.Errorf("%s error: %s", method, jsonToString(resp.Error))
+		return fmt.Errorf("%s error: %s", method, common.JsonToString(resp.Error))
 	} else if ret != nil {
 		bs, _ := json.Marshal(resp.Result)
 		json.Unmarshal(bs, &ret)
@@ -82,13 +82,4 @@ func (a *Aria2) fixParams(params ...interface{}) []interface{} {
 		return append([]interface{}{a.secret}, params...)
 	}
 	return params
-}
-
-func jsonToString(obj interface{}) string {
-	bs, err := json.Marshal(obj)
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(bs)
 }

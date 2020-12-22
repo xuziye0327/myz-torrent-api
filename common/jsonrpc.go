@@ -3,6 +3,7 @@ package common
 import (
 	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 )
@@ -79,6 +80,7 @@ func (cli *RPCClient) Call(method string, params ...interface{}) (*RPCResponse, 
 	var rpcResp *RPCResponse
 	decoder := json.NewDecoder(httpResp.Body)
 	err = decoder.Decode(&rpcResp)
+	log.Printf("jsonrpc result: %s, err: %v", JsonToString(rpcResp), err)
 
 	return rpcResp, err
 }
