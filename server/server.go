@@ -2,6 +2,7 @@ package server
 
 import (
 	"fmt"
+	"myz-torrent-api/aria2"
 	"myz-torrent-api/common"
 	"myz-torrent-api/downloader"
 	"os"
@@ -12,9 +13,10 @@ import (
 
 // Server app context
 type Server struct {
-	r    *gin.Engine
-	conf *common.Config
-	dmg  *downloader.DownloadManager
+	r     *gin.Engine
+	conf  *common.Config
+	dmg   *downloader.DownloadManager
+	aria2 *aria2.Aria2
 }
 
 // Run server
@@ -35,8 +37,10 @@ func (s *Server) Run() error {
 func (s *Server) initRouter() {
 	r := gin.Default()
 
-	r.GET("download", s.listJob)
-	r.POST("download", s.downloadJob)
+	r.GET("active_job", s.listActiveJob)
+	r.GET("waiting_job", s.listWaitingJob)
+	r.GET("stopped_job", s.listStoppedJob)
+	r.POST("add_uri", s.addURI)
 	r.POST("download/:id", s.startJob)
 	r.PUT("download/:id", s.pauseJob)
 	r.DELETE("download/:id", s.deleteJob)
@@ -71,11 +75,8 @@ func (s *Server) initConfig() error {
 }
 
 func (s *Server) initDownloader() error {
-	dmg, err := downloader.Create(s.conf)
-	if err != nil {
-		return err
+	if s.conf.DownloadConfig.Aria2Address != "" {
+		s.aria2 = aria2.NewAria2WithSecret(fmt.Sprintf("%s/jsonrpc", s.conf.DownloadConfig.Aria2Address), s.conf.DownloadConfig.Aria2Secert)
 	}
-
-	s.dmg = dmg
 	return nil
 }

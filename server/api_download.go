@@ -6,27 +6,44 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (s *Server) listJob(c *gin.Context) {
-	c.JSON(http.StatusOK, s.dmg.State())
+func (s *Server) listActiveJob(c *gin.Context) {
+	if stats, err := s.aria2.TellActive(); err != nil {
+		c.JSON(http.StatusOK, err)
+	} else {
+		c.JSON(http.StatusOK, stats)
+	}
 }
 
-func (s *Server) downloadJob(c *gin.Context) {
+func (s *Server) listWaitingJob(c *gin.Context) {
+	if stats, err := s.aria2.TellWaiting(0, 10); err != nil {
+		c.JSON(http.StatusOK, err)
+	} else {
+		c.JSON(http.StatusOK, stats)
+	}
+}
+
+func (s *Server) listStoppedJob(c *gin.Context) {
+	if stats, err := s.aria2.TellStopped(0, 10); err != nil {
+		c.JSON(http.StatusOK, err)
+	} else {
+		c.JSON(http.StatusOK, stats)
+	}
+}
+
+func (s *Server) addURI(c *gin.Context) {
 	var links []string
-	err := c.BindJSON(&links)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
+	if err := c.BindJSON(&links); err != nil {
+		c.JSON(http.StatusOK, gin.H{
 			"msg": "magnet is empty",
 		})
 		return
 	}
 
-	for _, m := range links {
-		if err := s.dmg.New(m); err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"msg": err.Error(),
-			})
-			return
-		}
+	if err := s.aria2.AddURI(links...); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"msg": err.Error(),
+		})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{

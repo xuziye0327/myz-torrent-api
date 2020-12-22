@@ -40,18 +40,18 @@ func (a *Aria2) TellStatus(gid string) (stat Status, err error) {
 }
 
 // TellActive returns a list of active downloads.
-func (a *Aria2) TellActive() (stat Status, err error) {
-	return stat, a.handler("aria2.tellActive", &stat)
+func (a *Aria2) TellActive() (stats []Status, err error) {
+	return stats, a.handler("aria2.tellActive", &stats)
 }
 
 // TellWaiting returns a list of waiting downloads, including paused ones.
-func (a *Aria2) TellWaiting(offset, num int) (stat Status, err error) {
-	return stat, a.handler("aria2.tellWaiting", &stat, offset, num)
+func (a *Aria2) TellWaiting(offset, num int) (stats []Status, err error) {
+	return stats, a.handler("aria2.tellWaiting", &stats, offset, num)
 }
 
 // TellStopped returns a list of stopped downloads.
-func (a *Aria2) TellStopped(offset, num int) (stat Status, err error) {
-	return stat, a.handler("aria2.tellStopped", &stat, offset, num)
+func (a *Aria2) TellStopped(offset, num int) (stats []Status, err error) {
+	return stats, a.handler("aria2.tellStopped", &stats, offset, num)
 }
 
 // GetGlobalStat returns global statistics such as the overall download and upload speeds.
