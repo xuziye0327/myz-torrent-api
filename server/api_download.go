@@ -40,9 +40,7 @@ func (s *Server) addURI(c *gin.Context) {
 	}
 
 	if err := s.aria2.AddURI(links...); err != nil {
-		c.JSON(http.StatusOK, gin.H{
-			"msg": err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 
