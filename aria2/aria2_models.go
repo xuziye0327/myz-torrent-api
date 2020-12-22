@@ -5,20 +5,20 @@ type Status struct {
 	GID             string `json:"gid"`
 	Status          State  `json:"status"`
 	InfoHash        string `json:"infoHash"`
-	CompletedLength int64  `json:"completedLength,string"`
+	CompletedLength int64  `json:"completedLength"`
 	TotalLength     int64  `json:"totalLength"`
-	DownloadSpeed   int64  `json:"downloadSpeed,string"`
-	ErrorCode       int    `json:"errorCode,string"`
+	DownloadSpeed   int64  `json:"downloadSpeed"`
+	ErrorCode       int    `json:"errorCode"`
 	ErrorMessage    string `json:"errorMessage"`
 }
 
 // GlobalStatistics is the overall download and upload speeds.
 type GlobalStatistics struct {
-	DownloadSpeed int64 `json:"downloadSpeed,string"`
-	UploadSpeed   int64 `json:"uploadSpeed,string"`
-	NumActive     int   `json:"numActive,string"`
-	NumWaiting    int   `json:"numWaiting,string"`
-	NumStopped    int   `json:"numStopped,string"`
+	DownloadSpeed int64 `json:"downloadSpeed"`
+	UploadSpeed   int64 `json:"uploadSpeed"`
+	NumActive     int   `json:"numActive"`
+	NumWaiting    int   `json:"numWaiting"`
+	NumStopped    int   `json:"numStopped"`
 }
 
 // State is running status of aria
