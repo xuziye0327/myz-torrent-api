@@ -31,7 +31,7 @@ func NewAria2WithSecret(url, secret string) *Aria2 {
 // AddURI adds a new download.
 // uris is an array of HTTP/FTP/SFTP/BitTorrent URIs (strings) pointing to the same resource.
 func (a *Aria2) AddURI(uris ...string) error {
-	return a.handler("aria2.addUri", nil, uris)
+	return a.handlerWithFixParams("aria2.addUri", nil, uris)
 }
 
 // TellStatus returns the progress of the download denoted by gid (string).

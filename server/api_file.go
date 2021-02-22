@@ -20,6 +20,7 @@ func (s *Server) listFile(c *gin.Context) {
 	root := s.conf.DownloadConfig.DownloadDir
 	fs, err := common.ListFiles(root)
 	if err != nil {
+		log.Println(err)
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}

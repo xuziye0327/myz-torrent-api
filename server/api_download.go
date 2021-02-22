@@ -1,6 +1,7 @@
 package server
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -55,6 +56,7 @@ func (s *Server) addURI(c *gin.Context) {
 
 	if err := s.aria2.AddURI(links...); err != nil {
 		c.JSON(http.StatusInternalServerError, err)
+		log.Println(err)
 		return
 	}
 
